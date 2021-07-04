@@ -3,6 +3,8 @@ const username = "aimaraqvo";
 const repoList = document.querySelector(".repo-list");
 const allReposContainer = document.querySelector(".repos");
 const repoData = document.querySelector(".repo-data");
+const viewReposButton = document.querySelector(".view-repos");
+const filterInput = document.querySelector(".filter-repos");
 
 //to fetch information from your GitHub profile using the GitHub API address
 const gitUserInfo = async function () {
@@ -51,6 +53,8 @@ const getRepos = async function () {
 
 //to display information about each repo.
 const displayReposInfo = function(repos) {
+    //show the filterInput element. 
+    filterInput.classList.remove("hide");
 
     //loop and create a list item for each repo and give each item
     for (const repo of repos) {
@@ -100,6 +104,8 @@ repoList.addEventListener("click", function(e) {
 
  //create and name a new function to display the specific repo information. The function should accept two parameters:  repoInfo and languages.
  const displayRepoInfo = function(repoInfo,languages) {
+     //remove the class of "hide" from the Back to Repo Gallery button
+    viewReposButton.classList.remove("hide");
     //empty the HTML of the section with a class of "repo-data" where the individual repo data will appear.
     repoData.innerHTML = "";
 
@@ -120,3 +126,40 @@ repoList.addEventListener("click", function(e) {
     repoData.append(divElement);
  };
 
+ //create a click event listener attached to your variable that points to the Back to Repo Gallery button. 
+ viewReposButton.addEventListener("click", function(){
+
+    //unhide (display) the section with the class of "repos", the location where all the repo information appears.     
+    allReposContainer.classList.remove("hide");
+    //Add the "hide" class to the section where the individual repo data will appear
+    repoData.classList.add("hide");
+    // add the "hide" class to the Back to Repo Gallery button itself
+    viewReposButton.classList.add("hide");
+});
+
+ // Dynamic search
+ // attach an "input" event listener to filterInput. Pass the event (e) the callback function
+filterInput.addEventListener ("input", function(e) {
+    //create a variable to capture the value of the search text
+    const searchText = e.target.value;
+    //Create a variable called repos to select ALL elements on the page with a class of "repo".
+    const repos = document.querySelectorAll(".repo");
+    //Create a variable and assign it to the lowercase value of the search text.
+    const searchLowerText = searchText.toLowerCase();
+
+    //Loop through each repo inside your repos element. 
+    for (const repo of repos) {
+        //create a variable and assign it to the lowercase value of the innerText. of each repo.
+        const repoLowerText = repo.innerText.toLowerCase();
+
+        //Check to see if the lowercase repo text includes the lowercase search text.
+        if (repoLowerText.includes(searchLowerText)) {
+            //f the repo contains the text, show it
+            repo.classList.remove("hide");
+            //If it doesn't contain the text, hide the repo.
+          } else {
+            repo.classList.add("hide");
+          }
+    }
+
+});
